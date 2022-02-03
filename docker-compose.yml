@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  sio.translations.api:
+    image: ${DOCKER_REGISTRY-}siotranslationsapi
+    build:
+      context: .
+      dockerfile: src/SIO.Translations.API/Dockerfile
+    depends_on: 
+      - sio.translations.api.sql.projections
+    external_links:
+      - sio.sql.store
+      - sio.rabbitmq
+      - sio.storage
+      - sio.redis
+  sio.translations.api.sql.projections:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+networks:    
+  default:
+    external:
+        name: sio.network

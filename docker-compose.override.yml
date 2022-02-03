@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  sio.translations.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__Store=Server=sio.sql.store;Initial Catalog=sio-store;User Id=sa;Password=1qaz-pl,
+      - ConnectionStrings__Projection=Server=sio.translations.api.sql.projections;Initial Catalog=sio-translations-api-projections;User Id=sa;Password=1qaz-pl,
+      - Identity__Authority=http://host.docker.internal:5000
+      - Identity__ApiResource=api
+    ports:
+      - "44374:80"
+      - "44375:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  sio.translations.api.sql.projections:
+    user: 'root'
+    environment:
+      SA_PASSWORD: "1qaz-pl,"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1460:1433"
+    volumes:
+      - /var/opt/mssql/data
